@@ -10,10 +10,37 @@ const jwt = require('jsonwebtoken')
 const authenticateToken = require('./middlewares/authenticateToken');
 const RefreshTokens = require('../src/models/RefreshTokens');
 require('dotenv').config();
+const { Op } = require('sequelize');
 
 routes = express.Router()
 
+routes.get('/users/:userNameOrEmail', authenticateToken, async (req, res) => {
+    const { userNameOrEmail } = req.params; 
 
+    try {
+        const user = await Users.findOne({
+            where: {
+                [Op.or]: [
+                    { username: userNameOrEmail },
+                    { email: userNameOrEmail },
+                ],
+            },
+        });
+
+        if (!user) {
+            return res.status(404).json({ message: 'Usuário não encontrado.' });
+        }
+
+        return res.status(200).json({
+            message: {
+                name: user.name || user.username, // Usa 'name' se existir, ou 'username' como fallback
+            },
+        });
+    } catch (error) {
+        console.error('Erro ao buscar usuário:', error);
+        return res.status(500).json({ message: 'Erro interno do servidor.' });
+    }
+});
 
 routes.post('/signup', async (req, res) => {
     const { username, email, password } = req.body;
