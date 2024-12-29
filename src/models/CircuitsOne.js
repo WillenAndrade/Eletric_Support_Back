@@ -49,25 +49,25 @@ const CircuitsOneTable = sequelize.define('circuitsonetable', {
     type: Sequelize.FLOAT,
     allowNull: true,
   },
-    // Definição de outros campos da tabela...
+    
     userId: {
-      type: Sequelize.INTEGER,
+      type: Sequelize.UUID,
       references: {
-        model: 'Users',  // Nome da tabela que você quer referenciar
-        key: 'id',       // A chave primária da tabela Users
+        model: 'Users',  
+        key: 'id',       
       },
-      allowNull: false  // Defina como necessário (true ou false)
+      allowNull: false  
     },
   }, );
 
   Users.hasMany(CircuitsOneTable, {
     foreignKey: 'userId',
-    onDelete: 'CASCADE',  // Se o usuário for deletado, os circuitos relacionados também serão
+    onDelete: 'CASCADE',  
   });
   
   CircuitsOneTable.belongsTo(Users, {
     foreignKey: 'userId',
-    onDelete: 'CASCADE',  // Se o usuário for deletado, o circuito será deletado
+    onDelete: 'CASCADE',  
   });
 
    (async () => {

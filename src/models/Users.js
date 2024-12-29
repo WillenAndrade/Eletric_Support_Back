@@ -8,12 +8,11 @@ const sequelize = new Sequelize('eletricsupport', 'root', 'tsqeupaf2025A', {
   dialect: 'mysql',
 });
 
-// Defina o model Usuários
 const Users = sequelize.define('users', {
   id: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID, // Alterado para UUID
+    defaultValue: Sequelize.UUIDV4, // Gerar automaticamente UUID
     primaryKey: true,
-    autoIncrement: true
   },
   name: {
     type: Sequelize.STRING,
@@ -21,11 +20,13 @@ const Users = sequelize.define('users', {
   },
   username: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
+    unique: true, // Evitar duplicação de usernames
   },
-  email :  {
+  email: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
+    unique: true, // Evitar duplicação de emails
   },
   cellNumber: {
     type: Sequelize.STRING,
@@ -33,10 +34,9 @@ const Users = sequelize.define('users', {
   },
   password: {
     type: Sequelize.STRING,
-    allowNull: true,
+    allowNull: false,
   },
- 
-}); 
+});
 
 // Método para criar usuário com senha hash
 Users.createWithHash = async (name, username, email, cellNumber, password) => {

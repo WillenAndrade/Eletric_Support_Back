@@ -49,7 +49,7 @@ const CircuitsTwoTable = sequelize.define('circuitstwotable', {
     allowNull: true,
   },
   userId: {
-    type: Sequelize.INTEGER,
+    type: Sequelize.UUID,
     references: {
       model: 'users',  // Reference the 'users' table
       key: 'id'        // Reference the 'id' column in 'users' table
