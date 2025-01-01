@@ -1,0 +1,39 @@
+services:
+  backend:
+    build:
+      context: .  # Agora está apontando para a pasta onde está o docker-compose.yml
+    container_name: nodejs-backend
+    ports:
+      - "3000:3000"
+    networks:
+      - app-network
+    volumes:
+      - .:/app  # Monta o diretório atual para /app no container
+    environment:
+      DB_HOST: mysql        
+      DB_PORT: 3306
+      DB_USER: root
+      DB_PASSWORD: tsqeupaf2025A
+      DB_NAME: eletricsupport
+    depends_on:
+      - mysql
+    command: /wait-for-it.sh mysql:3306 -- npm start 
+
+  mysql:
+    image: mysql:8.0
+    container_name: mysql
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: tsqeupaf2025A
+      MYSQL_DATABASE: eletricsupport
+    networks:
+      - app-network
+    volumes:
+      - mysql_data:/var/lib/mysql
+
+volumes:
+  mysql_data:
+
+networks:
+  app-network:
