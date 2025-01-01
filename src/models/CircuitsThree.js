@@ -1,18 +1,11 @@
 const Sequelize = require('sequelize');
-const Users = require('./Users')
+const sequelize = require('../db/connection');
 
-
-const sequelize = new Sequelize('eletricsupport', 'root', 'tsqeupaf2025A', {
-  host: 'localhost',
-  dialect: 'mysql',
-})
-
-// Defina o model Circuito
 const CircuitsThreeTable = sequelize.define('circuitsthreetable', {
   id: {
     type: Sequelize.INTEGER,
     primaryKey: true,
-    autoIncrement: true
+    autoIncrement: true,
   },
   count: {
     type: Sequelize.INTEGER,
@@ -52,32 +45,9 @@ const CircuitsThreeTable = sequelize.define('circuitsthreetable', {
   },
   userId: {
     type: Sequelize.UUID,
-    references: {
-      model: 'users',  // Reference the 'users' table
-      key: 'id'        // Reference the 'id' column in 'users' table
-    },
-    allowNull : false
-  } 
-}); 
-
-Users.hasMany(CircuitsThreeTable, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',  // Se o usuário for deletado, os circuitos relacionados também serão
+    allowNull: false,
+  },
 });
 
-CircuitsThreeTable.belongsTo(Users, {
-  foreignKey: 'userId',
-  onDelete: 'CASCADE',  // Se o usuário for deletado, o circuito será deletado
-});
-
-   (async () => {
-    try {
-     await sequelize.sync({ alter: true });
-     console.log('Tabela de circuitos 3 sincronizada com sucesso!');
-   } catch (err) {
-     console.error('Erro ao sincronizar a tabela Circuito:', err);
-   }
-  })()
-   
-// Exporte o modelo
 module.exports = CircuitsThreeTable;
+

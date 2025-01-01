@@ -1,17 +1,11 @@
 const Sequelize = require('sequelize');
-
 const bcrypt = require('bcryptjs');
-
-
-const sequelize = new Sequelize('eletricsupport', 'root', 'tsqeupaf2025A', {
-  host: 'localhost',
-  dialect: 'mysql',
-});
+const sequelize = require('../db/connection'); // Importa a instância de conexão
 
 const Users = sequelize.define('users', {
   id: {
-    type: Sequelize.UUID, // Alterado para UUID
-    defaultValue: Sequelize.UUIDV4, // Gerar automaticamente UUID
+    type: Sequelize.UUID,
+    defaultValue: Sequelize.UUIDV4,
     primaryKey: true,
   },
   name: {
@@ -21,12 +15,12 @@ const Users = sequelize.define('users', {
   username: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true, // Evitar duplicação de usernames
+    unique: true,
   },
   email: {
     type: Sequelize.STRING,
     allowNull: false,
-    unique: true, // Evitar duplicação de emails
+    unique: true,
   },
   cellNumber: {
     type: Sequelize.STRING,
@@ -41,17 +35,7 @@ const Users = sequelize.define('users', {
 // Método para criar usuário com senha hash
 Users.createWithHash = async (name, username, email, cellNumber, password) => {
   const hashedPassword = await bcrypt.hash(password, 10);
-  return Users.create({ name, username, email,  cellNumber, password: hashedPassword });
+  return Users.create({ name, username, email, cellNumber, password: hashedPassword });
 };
 
-(async () => {
-  try {
-    await sequelize.sync({alter: true});
-    console.log('Tabela de usuários sincronizada com sucesso!');
-  } catch (err) {
-    console.error('Erro ao sincronizar a tabela de usuários:', err);
-  }
-})();
-
- 
 module.exports = Users;
